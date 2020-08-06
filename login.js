@@ -22,3 +22,11 @@ reenterPassword.addEventListener('blur', ()=> {
         errorMsg.style.display = 'inline';
     }
 });
+
+function Toggle(){
+    if(passwordInput.type === "password"){
+        passwordInput.type = "text";
+    } else {
+        passwordInput.type = "password";
+    }
+}
