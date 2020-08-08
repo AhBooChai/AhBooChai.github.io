@@ -16,9 +16,9 @@ window.onload = function(){
                 let price = document.createElement('h5');
                 let addToCart = document.createElement('button');
 
-                cardImage.src = `${imageUrl}`;
-                name.textContent = `${name}`;
-                price.textContent = `${price / 100}`;
+                cardImage.src = `${cameras[i].imageUrl}`;
+                name.textContent = `${cameras[i].name}`;
+                price.textContent = `$${cameras[i].price / 100}.00`;
 
                 cardBody.appendChild(name);
                 cardBody.appendChild(price);
@@ -38,8 +38,9 @@ window.onload = function(){
                 price.classList.add('text-center');
                 addToCart.classList.add('btn', 'btn-primary');
 
+                document.getElementsByClassName('stretched-link').value = url + '/' + `${cameras[i]._id}`;
 
-            } else if (this.status == 404) {
+            } if(this.status == 404) {
                 document.getElementById('productList').innerHTML = "404: Not Found!";
             }
         }
