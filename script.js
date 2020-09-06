@@ -1,6 +1,6 @@
 window.onload = function(){
     let xhr = new XMLHttpRequest();
-    let url = 'http://localhost:3000/api/cameras';
+    let url = 'http://localhost:3000/api/cameras/';
 
     xhr.open('GET', url);
 
@@ -14,19 +14,17 @@ window.onload = function(){
                 let cardBody = document.createElement('div');
                 let name = document.createElement('h5');
                 let price = document.createElement('h5');
-                let addToCart = document.createElement('button');
                 let productInfo = document.createElement('a');
 
                 cardImage.src = `${cameras[i].imageUrl}`;
                 name.textContent = `${cameras[i].name}`;
                 price.textContent = `$${cameras[i].price / 100}.00`;
-                addToCart.textContent = 'Add to cart';
                 productInfo.innerHTML = 'Product info';
+                productInfo.href = 'product.html?productId=' + `${cameras[i]._id}`;
 
                 cardBody.appendChild(name);
                 cardBody.appendChild(price);
                 cardBody.appendChild(productInfo);
-                cardBody.appendChild(addToCart);
 
                 divTwo.appendChild(cardImage);
                 divTwo.appendChild(cardBody);
@@ -37,19 +35,35 @@ window.onload = function(){
 
                 divOne.classList.add('col-12', 'col-md-6', 'col-lg-4');
                 divTwo.classList.add('card', 'm-4', 'mb-lg-0');
-                cardImage.classList.add('card-img-top', 'stretched-link');
+                cardImage.classList.add('card-img-top');
                 cardBody.classList.add('text-center');
                 name.classList.add('text-center');
                 price.classList.add('text-center');
-                addToCart.classList.add('btn', 'btn-primary', 'm-3');
                 productInfo.classList.add('btn', 'btn-primary', 'm-3', 'stretched-link');
-
-                document.getElementsByClassName('stretched-link').value = url + '/' + `${cameras[i]._id}`;
-
+                
             } if(this.status == 404) {
-                document.getElementById('productList').innerHTML = "404: Not Found!";
+                document.getElementById('productList').innerHTML = "404: Document Not Found!";
             }
         }
     }
     xhr.send();
 }
+
+function onLoadCartNumbers() {
+    let productNumbers = localStorage.getItem('cartNumbers');
+
+    if(productNumbers) {
+        totalItemsInCart.textContent =  productNumbers;
+    }
+}
+
+onLoadCartNumbers();
+
+
+
+
+
+
+
+
+
