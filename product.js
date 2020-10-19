@@ -25,8 +25,9 @@ getProductInfo = function(){
             productImage.src = `${camera.imageUrl}`;
             productName.textContent = `${camera.name}`;
             productDescription.textContent = `${camera.description}`;
-            productPrice.textContent = `$${camera.price/100}.00`;
-            
+            productPrice.textContent = `$${camera.price / 100}.00`;
+            camera.inCart = 0;
+
             function addItems(){
                 let customisation = Object.values(camera.lenses);
                 for(let i = 0; i < customisation.length; i++){
@@ -36,62 +37,69 @@ getProductInfo = function(){
                 }
             }
             addItems();
-        }
-        else if (this.status === 404){
-            document.getElementById('cameraDisplay').innerHTML = '404 : Document not found!';
+        } else if (this.status === 404){
+            document.getElementById('camera').innerHTML = '404: Document not found!';
         }
     }
     xhr.send();
 }
 getProductInfo();
 
-//------------------------------------------Add to Cart ----------------------------------------------------
 let addToCart = document.getElementById('addToCart');
-let totalItemsInCart = document.getElementById('totalItemsInCart');
 
 addToCart.addEventListener('click', () => {
     cartNumbers(camera);
-});
+})
 
-function onLoadCartNumbers() {
+function onLoadCartNumbers(){
     let productNumbers = localStorage.getItem('cartNumbers');
 
     if(productNumbers) {
-        totalItemsInCart.textContent =  productNumbers;
+        document.getElementById('totalItemsInCart').textContent = productNumbers;
     }
 }
 
 function cartNumbers(camera){
-    console.log('The product clicked is', camera);
     let productNumbers = localStorage.getItem('cartNumbers');
     productNumbers = parseInt(productNumbers);
-
     if(productNumbers) {
-        localStorage.setItem('cartNumbers', productNumbers + 1); 
-        totalItemsInCart.textContent = productNumbers + 1;
-         
+        localStorage.setItem('cartNumbers', productNumbers + 1);
+        document.getElementById('totalItemsInCart').textContent = productNumbers + 1;
     } else {
         localStorage.setItem('cartNumbers', 1);
-        totalItemsInCart.textContent =  1;
-    }
-
-    setItems(camera);
+        document.getElementById('totalItemsInCart').textContent = 1;
+    }   
+    addItemToCart(camera);
 }
 
-function setItems(camera){
-    let cartItem = localStorage.getItem('productsInCart');
-    cartItem = JSON.parse(cartItem);
-    console.log('My cart items are', cartItem);
-    cartItem = {
-        [camera.name]: camera
-    }
-
-    localStorage.setItem('productsInCart', JSON.stringify(cartItem));
-}
 onLoadCartNumbers();
 
-
-
-
-
- 
+function addItemToCart(camera){
+console.log('addItemToCart');
+    camera = {
+        id : camera._id,
+        qty: 1,
+        price: camera.price,
+        name: camera.name,
+        image: camera.imageUrl
+    }
+    //step 1 retrieve the productlist in localStorage 
+    let list = JSON.parse(localStorage.getItem('productsInCart'));
+    console.log(list);
+    //step 2 check if the camera is already in the list
+    if(list.length == 0){
+        list.push(camera);
+    } else {
+        //step 2a if the camera is already in the list, then update the quantity +1
+        let index = list.findIndex(o => o.id == camera.id);
+        console.log(index);
+        if (index != -1) {
+            list[index].qty += 1;
+        } else {
+                //step 2b otherwise add the camera as a new entry
+            list.push(camera);
+        }
+    } 
+    console.log(list);
+localStorage.setItem('productsInCart', JSON.stringify(list));
+}
