@@ -28,7 +28,7 @@ function displayCart(){
             &nbsp;
             <span>${camera.qty}</span>
             &nbsp;
-            <i class="fa fa-plus-square" aria-hidden="true"></i>
+            <i onclick="increaseQuantity('${camera.id}')" class="fa fa-plus-square" aria-hidden="true"></i>
             </td>
             <td>$${camera.qty * (camera.price / 100)}.00</td>
             </tr>
@@ -45,7 +45,7 @@ function displayCart(){
 }
 displayCart();
 
-function deleteProduct (id){
+function deleteProduct(id){
     let list = JSON.parse(localStorage.getItem('productsInCart'));
     //step 2 check if the camera is already in the list
         //step 2a if the camera is already in the list, then update the quantity +1
@@ -57,9 +57,45 @@ function deleteProduct (id){
             list.splice(index, 1);
         } 
         localStorage.setItem('productsInCart', JSON.stringify(list));
-        
         displayCart();
         onLoadCartNumbers();
 
 }
 
+function increaseQuantity(id){
+    let list = JSON.parse(localStorage.getItem('productsInCart'));
+    let index = list.findIndex(o => o.id ==id);
+    let productNumbers = localStorage.getItem('cartNumbers');
+    productNumbers = parseInt(productNumbers);
+
+    if(index != -1){
+        list[index].qty += 1;
+        let productNumbers = localStorage.getItem('cartNumbers');
+        productNumbers = parseInt(productNumbers);
+        localStorage.setItem('cartNumbers', productNumbers + 1 );
+    }
+    localStorage.setItem('productsInCart', JSON.stringify(list));
+    displayCart();
+    onLoadCartNumbers();
+
+}
+
+function decreaseQuantity(id){
+    let list = JSON.parse(localStorage.getItem('productsInCart'));
+    let index = list.findIndex(o => o.id ==id);
+    let productNumbers = localStorage.getItem('cartNumbers');
+    productNumbers = parseInt(productNumbers);
+
+    if(index != -1){
+        list[index].qty -= 1;
+        let productNumbers = localStorage.getItem('cartNumbers');
+        productNumbers = parseInt(productNumbers);
+        localStorage.setItem('cartNumbers', productNumbers - 1 );
+        if (list[index].qty === 0) {
+            deleteProduct();
+        }
+    }
+    localStorage.setItem('productsInCart', JSON.stringify(list));
+    displayCart();
+    onLoadCartNumbers();
+}
