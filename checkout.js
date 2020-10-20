@@ -24,7 +24,7 @@ function displayCart(){
             </td>
             <td>$${camera.price / 100}.00</td>
             <td>
-            <i class="fa fa-minus-square" aria-hidden="true"></i>
+            <i onclick="increaseQuantity('${camera.id}')" class="fa fa-minus-square" aria-hidden="true"></i>
             &nbsp;
             <span>${camera.qty}</span>
             &nbsp;
